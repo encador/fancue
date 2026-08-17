@@ -1,4 +1,4 @@
-module github.com/encador/suggester
+module github.com/encador/fancue
 
 go 1.26.6
 
