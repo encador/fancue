@@ -19,6 +19,7 @@ func main() {
 	cnf := config{}
 	flag.StringVar(&cnf.address, "address", "localhost", "IP-address on which the application runs")
 	flag.IntVar(&cnf.port, "port", 8080, "Port on which the application runs")
+	flag.Parse()
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
