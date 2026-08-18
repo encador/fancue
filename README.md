@@ -5,6 +5,8 @@
 
 A website that allows viewers to submit reaction content suggestions to their favorite streamers and video creators.
 
+## `Interaction Flow`
+
 ```mermaid
 sequenceDiagram
     participant A as Viewer A
