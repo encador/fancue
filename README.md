@@ -5,6 +5,24 @@
 
 A website that allows viewers to submit reaction content suggestions to their favorite streamers and video creators.
 
+```mermaid
+sequenceDiagram
+    participant A as Viewer A
+    participant B as Viewer B
+    participant C as Creator
+    participant Server
+
+    A->>Server: recommend x to C
+    Server-->>A: success
+    B->>Server: recommend y to C
+    Server-->>B: success
+    A->>Server: recommend y to C
+    Server-->>A: success
+    C->>Server: get recommendations
+    Server-->>C: (y, 2), (x, 1)
+
+```
+
 ## `Language & Tools`
 
 > [!NOTE]
