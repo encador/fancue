@@ -1,11 +1,11 @@
+# FanCue
+
 > [!WARNING]
 > Project is in **Active Development**
 
-# FanCue
-
 A website that allows viewers to submit reaction content suggestions to their favorite streamers and video creators.
 
-## `Language & Tools`
+## Language & Tools
 
 > [!NOTE]
 > Details may change
@@ -30,3 +30,12 @@ A website that allows viewers to submit reaction content suggestions to their fa
 - Very portable
 - Easy deployment
 - Should be sufficient for this read-heavy app
+
+## Local Deployment
+
+```bash
+git clone git@github.com:encador/fancue.git
+cd fancue
+go mod download
+go run .
+```
