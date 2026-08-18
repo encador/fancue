@@ -15,6 +15,7 @@ coverage.*
 profile.cov
 
 *.DS_Store
+/bin
 
 # Generated Templ files
 *_templ.go

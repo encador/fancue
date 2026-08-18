@@ -8,6 +8,8 @@ import (
 	"os"
 	"os/signal"
 	"time"
+
+	"github.com/encador/fancue/internal/components"
 )
 
 type config struct {
@@ -18,12 +20,13 @@ type config struct {
 func main() {
 	cnf := config{}
 	flag.StringVar(&cnf.address, "address", "localhost", "IP-address on which the application runs")
-	flag.IntVar(&cnf.port, "port", 8080, "Port on which the application runs")
+	flag.IntVar(&cnf.port, "port", 55000, "Port on which the application runs")
 	flag.Parse()
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello, World!"))
+		// w.Write([]byte("Hello, World!"))
+		components.BasePage().Render(r.Context(), w)
 	})
 
 	srv := http.Server{
