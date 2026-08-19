@@ -10,9 +10,9 @@ build:
 run: build
 	./bin/fancue
 
-dev: build
+dev:
 	go tool templ generate --watch \
-		--cmd="./bin/fancue" \
+		--cmd="go run . -port=55000 -address=localhost" \
 		--proxy="http://localhost:55000" \
 		--proxybind="localhost" --proxyport="8080" \
 		--open-browser=false
