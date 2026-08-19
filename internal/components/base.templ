@@ -13,6 +13,7 @@ templ Base() {
 				data-init="$toggle=false"
 			>
 				<button type="button" data-attr:disabled="$toggle" data-on:click="$toggle = !$toggle" class="red">Click Me</button>
+				<button type="button" class="blue">o_o</button>
 				<button type="button" data-attr:disabled="!$toggle" data-on:click="$toggle = !$toggle" class="green">Click Me</button>
 			</div>
 		</body>
@@ -33,8 +34,9 @@ templ BaseCSS() {
 			--beige: #fff8eb;
 			--beige-2: #fff1d6;
 			--beige-blue: #f8f5e6;
-			--blue: #f1f8f8;
-			--blue-2: #e4f1f2;
+			--blue: #c5e1fc;
+			--blue-2: #77baf8;
+			--blue-3: #08549b;
 			--black: black;
 			--red: #f29195;
 			--red-2: #ec5b60;
@@ -89,6 +91,13 @@ templ BaseCSS() {
 		}
 		button.green:hover:not(:disabled) {
 			background-color: var(--green-2);
+		}
+		button.blue {
+			color: var(--blue-3);
+			background-color: var(--blue);
+		}
+		button.blue:hover:not(:disabled) {
+			background-color: var(--blue-2);
 		}
 
 		body {
