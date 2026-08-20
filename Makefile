@@ -12,7 +12,7 @@ run: build
 
 dev:
 	go tool templ generate --watch \
-		--cmd="go run . -port=55002" \
-		--proxy="http://localhost:55002" \
+		--cmd="go run . -port=55000" \
+		--proxy="http://localhost:55000" \
 		--proxybind="localhost" --proxyport="8080" \
 		--open-browser=false
