@@ -1,9 +1,9 @@
-package handlers
+package handler
 
 import (
 	"net/http"
 
-	"github.com/encador/fancue/internal/components"
+	"github.com/encador/fancue/internal/component"
 )
 
 type Handler struct {
@@ -15,6 +15,6 @@ func NewHandler() *Handler {
 
 func (h *Handler) HomePage() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		components.Base().Render(r.Context(), w)
+		component.Base().Render(r.Context(), w)
 	})
 }
