@@ -4,18 +4,25 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"io/fs"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
 
+	"embed"
+
 	"github.com/encador/fancue/internal/components"
+	"github.com/encador/fancue/internal/middleware"
 )
 
 type config struct {
 	address string
 	port    int
 }
+
+//go:embed internal/static
+var staticFiles embed.FS
 
 func main() {
 	cnf := config{}
@@ -24,13 +31,17 @@ func main() {
 	flag.Parse()
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+
+	sub, _ := fs.Sub(staticFiles, "internal/static")
+	mux.Handle("/static/", http.StripPrefix("/static/", middleware.Cache(http.FileServerFS(sub), 24)))
+
+	mux.HandleFunc("/{$}", func(w http.ResponseWriter, r *http.Request) {
 		components.Base().Render(r.Context(), w)
 	})
 
 	srv := http.Server{
 		Addr:    fmt.Sprintf("%s:%d", cnf.address, cnf.port),
-		Handler: mux,
+		Handler: middleware.Logger(mux),
 	}
 
 	go func() {

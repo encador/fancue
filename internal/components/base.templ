@@ -5,7 +5,7 @@ templ Base() {
 	<html>
 		<head>
 			@BaseCSS()
-			<script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.2/bundles/datastar.js"></script>
+			<script type="module" src="/static/datastar.js"></script>
 		</head>
 		<body>
 			<div
@@ -72,11 +72,10 @@ templ BaseCSS() {
 		}
 		button:disabled {
 			opacity: 0.6;
-			transform: none;
-			box-shadow: 2px 2px;
+			transform: translate(4px, 4px);
+			box-shadow: none;
 			transition: none;
 			cursor: default;
-			transform: none;
 		}
 		button.red {
 			color: var(--red-3);
@@ -114,7 +113,7 @@ templ BaseCSS() {
 			width: 65vw;
 			height: 70vh;
 			background-color: var(--primary);
-			border: 4px solid var(--border);
+			border: 3px solid var(--border);
 			display: flex;
 			gap: 10px;
 			flex-direction: column;
