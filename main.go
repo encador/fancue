@@ -12,7 +12,7 @@ import (
 
 	"embed"
 
-	"github.com/encador/fancue/internal/components"
+	"github.com/encador/fancue/internal/handlers"
 	"github.com/encador/fancue/internal/middleware"
 )
 
@@ -35,9 +35,8 @@ func main() {
 	sub, _ := fs.Sub(staticFiles, "internal/static")
 	mux.Handle("/static/", http.StripPrefix("/static/", middleware.Cache(http.FileServerFS(sub), 24)))
 
-	mux.HandleFunc("/{$}", func(w http.ResponseWriter, r *http.Request) {
-		components.Base().Render(r.Context(), w)
-	})
+	h := handlers.NewHandler()
+	mux.Handle("/{$}", h.HomePage())
 
 	srv := http.Server{
 		Addr:    fmt.Sprintf("%s:%d", cnf.address, cnf.port),
