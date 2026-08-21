@@ -37,6 +37,7 @@ func main() {
 
 	h := handler.NewHandler()
 	mux.Handle("/{$}", h.HomePage())
+	mux.Handle("/test", h.TestPage())
 
 	srv := http.Server{
 		Addr:    fmt.Sprintf("%s:%d", cnf.address, cnf.port),

@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 
+	"github.com/encador/fancue/internal/captcha"
 	"github.com/encador/fancue/internal/component"
 )
 
@@ -15,6 +16,12 @@ func NewHandler() *Handler {
 
 func (h *Handler) HomePage() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		component.Base().Render(r.Context(), w)
+		component.Base(component.Buttons()).Render(r.Context(), w)
+	})
+}
+
+func (h *Handler) TestPage() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		component.Base(captcha.New()).Render(r.Context(), w)
 	})
 }

@@ -1,0 +1,67 @@
+package component
+
+import "strconv"
+import "math"
+
+templ Captcha(icons []string, answer string) {
+	@CaptchaCSS()
+	<div id="captcha">
+		<span>Select all: 🥑</span>
+		{{ c := int(math.Sqrt(float64(len(icons)))) }}
+		<div id="captcha-box" style={ "--columns: " + strconv.Itoa(c) }>
+			for i := range(len(icons)) {
+				<button
+					class="blue"
+					data-on:click="el.disabled = true"
+				>{ icons[i] }</button>
+			}
+		</div>
+		<div id="captcha-buttons">
+			<button id="captcha-submit" type="button" class="green">Submit</button>
+			<button id="captcha-reset" type="button" class="red">⟲</button>
+		</div>
+	</div>
+}
+
+templ CaptchaCSS() {
+	<style>
+		#captcha {
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			border: 0.2rem solid var(--border);
+			background-color: var(--beige);
+			padding-bottom: 1rem;
+		}
+		#captcha-buttons {
+			position: absolute;
+			bottom: -1.8rem;
+			width: 100%;
+			display: flex;
+			flex-direction: row;
+			alight-items: center;
+			justify-content: center;
+			gap: 0.8rem;
+		}
+		#captcha span {
+			color: var(--red-3);
+			font-size: 2rem;
+			font-weight: bold;
+			border-bottom: 0.2rem solid black;
+			text-align: center;
+			width: 100%;
+		}
+		#captcha-box {
+			padding: 1rem;
+			display: grid;
+			grid-template-columns: repeat(var(--columns), 1fr);
+			gap: 1rem;
+		}
+
+		#captcha-box button {
+			font-size: 2rem;
+			padding: 0 1rem 0 1rem;
+		}
+	</style>
+}
