@@ -5,20 +5,27 @@ import "math"
 
 templ Captcha(icons []string, answer string) {
 	@CaptchaCSS()
-	<div id="captcha">
+	<div
+		id="captcha"
+		data-init="$selections = []"
+	>
 		<span>Select all: 🥑</span>
 		{{ c := int(math.Sqrt(float64(len(icons)))) }}
-		<div id="captcha-box" style={ "--columns: " + strconv.Itoa(c) }>
+		<div id="captcha-box" style={ "--captcha-columns: " + strconv.Itoa(c) }>
 			for i := range(len(icons)) {
 				<button
 					class="blue"
-					data-on:click="el.disabled = true"
+					data-attr:disabled={ "$selections.includes(" + strconv.Itoa(i) + ")" }
+					data-on:click={ "$selections.push(" + strconv.Itoa(i) + ")" }
 				>{ icons[i] }</button>
 			}
 		</div>
 		<div id="captcha-buttons">
 			<button id="captcha-submit" type="button" class="green">Submit</button>
-			<button id="captcha-reset" type="button" class="red">⟲</button>
+			<button id="captcha-reset" type="button" class="red"
+				data-on:click="$selections.length=0"
+				data-show="$selections.length!==0"
+			>⟲</button>
 		</div>
 	</div>
 }
@@ -55,8 +62,8 @@ templ CaptchaCSS() {
 		#captcha-box {
 			padding: 1rem;
 			display: grid;
-			grid-template-columns: repeat(var(--columns), 1fr);
-			gap: 1rem;
+			grid-template-columns: repeat(var(--captcha-columns), 1fr);
+			gap: 0.8rem;
 		}
 
 		#captcha-box button {
