@@ -16,10 +16,10 @@ var emoji = []string{
 // genCaptcha is used to instantiate captcha component data
 //
 // return choices []string, targets []int, and error
-func genCaptcha(rows int) ([]string, []int, error) {
-	choices := make([]string, rows*rows)
+func genCaptcha(count int) ([]string, []int, error) {
+	choices := make([]string, count)
 	targets := []int{}
-	for i := range rows * rows {
+	for i := range count {
 		num, _ := rand.Int(rand.Reader, big.NewInt(int64(len(emoji))))
 		choices[i] = emoji[int(num.Int64())]
 	}
@@ -40,7 +40,7 @@ func genCaptcha(rows int) ([]string, []int, error) {
 
 // Returns a fully functional captcha templ.Component
 func New() templ.Component {
-	icons, targets, _ := genCaptcha(3)
+	icons, targets, _ := genCaptcha(7)
 	fmt.Println(targets)
 	return component.Captcha(icons, icons[targets[0]], "")
 }

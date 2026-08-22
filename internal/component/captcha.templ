@@ -1,65 +1,59 @@
 package component
 
 import "strconv"
-import "math"
 
 templ Captcha(icons []string, target, secret string) {
 	@CaptchaCSS()
 	<div
 		id="captcha"
-		data-init="$selections = []"
+		data-init="$selection = []"
 	>
 		<span id="captcha-prompt">Select all: { target }</span>
-		{{ c := int(math.Sqrt(float64(len(icons)))) }}
-		<div id="captcha-box" style={ "--captcha-columns: " + strconv.Itoa(c) }>
+		<div id="captcha-box">
 			for i := range(len(icons)) {
 				<button
 					class="blue"
-					data-attr:disabled={ "$selections.includes(" + strconv.Itoa(i) + ")" }
-					data-on:click={ "$selections.push(" + strconv.Itoa(i) + ")" }
+					data-attr:disabled={ "$selection.includes(" + strconv.Itoa(i) + ")" }
+					data-on:click={ "$selection.push(" + strconv.Itoa(i) + ")" }
 				>{ icons[i] }</button>
 			}
 		</div>
-		<div id="captcha-buttons">
-			<button id="captcha-submit" type="button" class="green" data-on:click="@post('/captcha')">Submit</button>
-			<button
-				id="captcha-reset"
-				type="button"
-				class="red"
-				data-on:click="$selections.length=0"
-				data-show="$selections.length!==0"
-			>⟲</button>
-		</div>
+		<button
+			id="captcha-reset"
+			type="button"
+			class="red"
+			data-on:click="$selection.length=0"
+			data-show="$selection.length !== 0"
+		>reset</button>
 	</div>
 }
 
 templ CaptchaCSS() {
 	<style>
 		#captcha {
+			max-width: 90%;
 			position: relative;
 			display: flex;
 			flex-direction: column;
 			align-items: center;
 			border: 0.2rem solid var(--border);
 			background-color: var(--beige);
-			padding-bottom: 1rem;
-			padding-top: 1rem;
+			/*padding-top: 0.5rem;*/
 		}
-		#captcha-buttons {
+		#captcha-reset {
 			position: absolute;
-			bottom: -1.8rem;
-			width: 100%;
-			display: flex;
-			flex-direction: row;
-			alight-items: center;
-			justify-content: center;
-			gap: 0.8rem;
+			top: -1.5rem;
+			right: -1rem;
+			font-size: 1rem;
+			rotate: 5deg;
 		}
+
 		#captcha-prompt {
 			position: absolute;
+			font-size: 1.5rem;
 			top: -1.8rem;
-			left: -3rem;
-			transform: rotate(-5deg);
+			left: -2.5rem;
+			rotate: -3deg;
 			border: 0.22rem solid black;
 			border-radius: 5px;
 			/*box-shadow: 0.1rem 0.1rem var(--border);*/
@@ -67,19 +61,22 @@ templ CaptchaCSS() {
 			width: fit-content;
 			background-color: var(--beige);
 			color: var(--red-3);
-			font-size: 2rem;
 			font-weight: bold;
 			text-align: center;
 		}
 		#captcha-box {
 			padding: 1rem;
-			display: grid;
-			grid-template-columns: repeat(var(--captcha-columns), 1fr);
+			display: flex;
+			flex-direction: row;
+			width: 100%;
+			justify-content: center;
+			align-items: center;
+			overflow: auto;
+			flex-wrap: wrap;
 			gap: 0.8rem;
 		}
 
 		#captcha-box button {
-			font-size: 2rem;
 			padding: 0 1rem 0 1rem;
 		}
 	</style>
