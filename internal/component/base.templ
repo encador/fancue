@@ -119,6 +119,34 @@ templ BaseCSS() {
 			background-color: var(--blue-2);
 		}
 
+		input {
+			all: unset;
+			border: 0.2rem solid #7a3900;
+			box-shadow: 0.2rem 0.2rem #7a3900;
+			background-color: #ffe9d6;
+			color: black;
+			font-size: 1.2rem;
+			padding: 0.15rem;
+			text-align: center;
+			margin-bottom: 1rem;
+		}
+		input:hover:not(:disabled) {
+			cursor: text;
+			background-color: #ffd3ad;
+		}
+		input:focus:not(:disabled) {
+			border: 0.2rem solid #7a3900;
+			background-color: #ffd3ad;
+			transform: translate(0.2rem, 0.2rem);
+			box-shadow: none;
+		}
+		input:disabled {
+			cursor: default;
+			transform: translate(0.2rem, 0.2rem);
+			box-shadow: none;
+			opacity: 0.5;
+		}
+
 		body {
 			background-color: var(--bg);
 			min-height: 100vh;

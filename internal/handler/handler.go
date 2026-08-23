@@ -28,6 +28,12 @@ func (h *Handler) TestPage() http.Handler {
 	})
 }
 
+func (h *Handler) LoginPage() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		component.Base(component.LoginForm()).Render(r.Context(),w)
+	})
+}
+
 type PageSignals struct {
 	Captcha captcha.Signals
 }

@@ -68,7 +68,7 @@ func getHash(arr []int) string {
 
 // Returns a fully functional captcha templ.Component
 func New() templ.Component {
-	icons, targets, _ := genCaptcha(9)
+	icons, targets, _ := genCaptcha(10)
 	return component.Captcha(icons, icons[targets[0]], getHash(targets))
 }
 

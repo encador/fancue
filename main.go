@@ -36,7 +36,10 @@ func main() {
 	mux.Handle("/static/", http.StripPrefix("/static/", middleware.Cache(http.FileServerFS(sub), 24)))
 
 	h := handler.NewHandler()
-	mux.Handle("/{$}", h.HomePage())
+	mux.Handle("GET /{$}", h.HomePage())
+	mux.Handle("GET /login", h.LoginPage())
+
+
 	mux.Handle("/test", h.TestPage())
 	mux.Handle("/captcha", h.Captcha())
 

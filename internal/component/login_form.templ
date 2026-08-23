@@ -1,25 +1,25 @@
 package component
 
-templ TestForm(challenge templ.Component) {
-	@TestFormCSS()
-	<form id="test-form">
-		<span id="test-form-label">Login</span>
-		<div id="chall">
-			@challenge
-		</div>
-		<input placeholder="Username"/>
+templ LoginForm() {
+	@LoginFormCSS()
+	<form id="login-form">
+		<span id="login-form-title">Login</span>
+		<label for="form-username">Username</label>
+		<input id="form-username" type="text"/>
+		<label for="form-password">Password</label>
+		<input id="form-password" type="password"/>
 		<button
 			type="button"
 			class="green"
-			id="test-form-submit"
+			id="login-form-submit"
 			data-on:click="@post('captcha')"
 		>Login</button>
 	</form>
 }
 
-templ TestFormCSS() {
+templ LoginFormCSS() {
 	<style>
-		#test-form {
+		#login-form {
 			position: relative;
 			width: fit-content;
 			padding: 1rem;
@@ -30,9 +30,15 @@ templ TestFormCSS() {
 			flex-direction: column;
 			justify-content: center;
 			align-items: center;
-			gap: 1rem;
+			/*gap: 1rem;*/
+			margin: 1.5rem;
 		}
-		#test-form-label {
+		#login-form label {
+			font-size: 1.2rem;
+			font-weight: bold;
+			color: var(--red-3)
+		}
+		#login-form-title {
 			position: absolute;
 			bottom: calc(100% - 0.5rem);
 			left: -1.5rem;
@@ -40,23 +46,15 @@ templ TestFormCSS() {
 			padding: 0 0.5rem 0 0.5rem;
 			background-color: var(--beige);
 			border: 0.2rem solid var(--border);
+			/*border-radius: 5px;*/
 			font-weight: bold;
 			font-size: 1.5rem;
 		}
-		#test-form-submit {
+		#login-form-submit {
 			position: absolute;
 			top: calc(100% - 1.5rem);
 			padding-right: 1rem;
 			padding-left: 1rem;
-		}
-		#chall {
-			position: absolute;
-			top: calc(100% + 5rem);
-			width: 85vw;
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
 		}
 	</style>
 }

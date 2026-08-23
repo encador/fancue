@@ -6,7 +6,7 @@ templ Captcha(icons []string, target, secret string) {
 	@CaptchaCSS()
 	<div
 		id="captcha"
-		data-init={ "$captcha = {selection: [], secret: '" + secret + "'}; $test='bobik'" }
+		data-init={ "$captcha = {selection: [], secret: '" + secret + "'}" }
 	>
 		<span id="captcha-prompt">Select all: { target }</span>
 		<div id="captcha-box">
@@ -26,13 +26,12 @@ templ Captcha(icons []string, target, secret string) {
 			data-show="$captcha.selection.length !== 0"
 		>reset</button>
 	</div>
-	<button type="button" class="green" data-on:click="@post('captcha')">Submit</button>
 }
 
 templ CaptchaCSS() {
 	<style>
 		#captcha {
-			max-width: 80%;
+			max-width: 100%;
 			position: relative;
 			display: flex;
 			flex-direction: column;
@@ -56,8 +55,8 @@ templ CaptchaCSS() {
 			top: -1.8rem;
 			left: -2.5rem;
 			rotate: -3deg;
-			border: 0.22rem solid black;
-			/* border-radius: 5px; */
+			border: 0.2rem solid black;
+			 border-radius: 5px;
 			padding: 0 0.5rem 0 0.5rem;
 			width: fit-content;
 			background-color: var(--beige);
