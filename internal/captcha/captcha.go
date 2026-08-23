@@ -2,15 +2,31 @@ package captcha
 
 import (
 	"crypto/rand"
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"math/big"
+	"slices"
+	"strconv"
 
 	"github.com/a-h/templ"
 	"github.com/encador/fancue/internal/component"
 )
 
+var salt [32]byte
+
 var emoji = []string{
 	"🍆", "🥑", "🌽", "🍒", "🥜", "🍎", "🥦",
+}
+
+type Signals struct {
+	Secret     string `json:"secret"`
+	Selections []int  `json:"selection"`
+}
+
+func init() {
+	fmt.Println("[LOG] CAPTCHA secret init")
+	rand.Read(salt[:])
 }
 
 // genCaptcha is used to instantiate captcha component data
@@ -38,9 +54,26 @@ func genCaptcha(count int) ([]string, []int, error) {
 	return choices, targets, nil
 }
 
+func getHash(arr []int) string {
+	h := sha256.New()
+	h.Write(salt[:])
+	for i, n := range arr {
+		if i > 0 {
+			h.Write([]byte("-"))
+		}
+		h.Write([]byte(strconv.Itoa(n)))
+	}
+	return hex.EncodeToString(h.Sum(nil))
+}
+
 // Returns a fully functional captcha templ.Component
 func New() templ.Component {
-	icons, targets, _ := genCaptcha(7)
-	fmt.Println(targets)
-	return component.Captcha(icons, icons[targets[0]], "")
+	icons, targets, _ := genCaptcha(9)
+	return component.Captcha(icons, icons[targets[0]], getHash(targets))
+}
+
+// Returns true if captcha answer is correct
+func Check(s Signals) bool {
+	slices.Sort(s.Selections)
+	return s.Secret == getHash(s.Selections)
 }

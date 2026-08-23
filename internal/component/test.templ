@@ -1,0 +1,21 @@
+package component
+
+templ TestForm(challenge templ.Component) {
+	@TestFormCSS()
+	<form id="test-form">
+		@challenge
+	</form>
+}
+
+templ TestFormCSS() {
+	<style>
+		#test-form {
+			width: 100%;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			gap: 1rem;
+		}
+	</style>
+}

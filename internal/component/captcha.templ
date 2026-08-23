@@ -6,15 +6,15 @@ templ Captcha(icons []string, target, secret string) {
 	@CaptchaCSS()
 	<div
 		id="captcha"
-		data-init="$selection = []"
+		data-init={ "$captcha = {selection: [], secret: '" + secret + "'}; $test='bobik'" }
 	>
 		<span id="captcha-prompt">Select all: { target }</span>
 		<div id="captcha-box">
 			for i := range(len(icons)) {
 				<button
 					class="blue"
-					data-attr:disabled={ "$selection.includes(" + strconv.Itoa(i) + ")" }
-					data-on:click={ "$selection.push(" + strconv.Itoa(i) + ")" }
+					data-attr:disabled={ "$captcha.selection.includes(" + strconv.Itoa(i) + ")" }
+					data-on:click={ "$captcha.selection.push(" + strconv.Itoa(i) + ")" }
 				>{ icons[i] }</button>
 			}
 		</div>
@@ -22,22 +22,24 @@ templ Captcha(icons []string, target, secret string) {
 			id="captcha-reset"
 			type="button"
 			class="red"
-			data-on:click="$selection.length=0"
-			data-show="$selection.length !== 0"
+			data-on:click="$captcha.selection.length=0"
+			data-show="$captcha.selection.length !== 0"
 		>reset</button>
 	</div>
+	<button type="button" class="green" data-on:click="@post('captcha')">Submit</button>
 }
 
 templ CaptchaCSS() {
 	<style>
 		#captcha {
-			max-width: 90%;
+			max-width: 80%;
 			position: relative;
 			display: flex;
 			flex-direction: column;
 			align-items: center;
 			border: 0.2rem solid var(--border);
 			background-color: var(--beige);
+			 /*box-shadow: 0.1rem 0.1rem var(--border);*/
 			/*padding-top: 0.5rem;*/
 		}
 		#captcha-reset {
@@ -55,8 +57,7 @@ templ CaptchaCSS() {
 			left: -2.5rem;
 			rotate: -3deg;
 			border: 0.22rem solid black;
-			border-radius: 5px;
-			/*box-shadow: 0.1rem 0.1rem var(--border);*/
+			/* border-radius: 5px; */
 			padding: 0 0.5rem 0 0.5rem;
 			width: fit-content;
 			background-color: var(--beige);

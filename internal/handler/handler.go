@@ -1,11 +1,11 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/encador/fancue/internal/captcha"
 	"github.com/encador/fancue/internal/component"
+	"github.com/starfederation/datastar-go/datastar"
 )
 
 type Handler struct {
@@ -23,12 +23,23 @@ func (h *Handler) HomePage() http.Handler {
 
 func (h *Handler) TestPage() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		component.Base(captcha.New()).Render(r.Context(), w)
+		challenge := captcha.New()
+		component.Base(component.TestForm(challenge)).Render(r.Context(), w)
 	})
+}
+
+type PageSignals struct {
+	Captcha captcha.Signals
 }
 
 func (h *Handler) Captcha() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("Hello")
+		signals := PageSignals{}
+		datastar.ReadSignals(r, &signals)
+		sse := datastar.NewSSE(w, r)
+		if !captcha.Check(signals.Captcha) {
+			sse.PatchElementTempl(captcha.New())
+
+		}
 	})
 }
