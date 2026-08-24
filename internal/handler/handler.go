@@ -1,12 +1,19 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/encador/fancue/internal/captcha"
 	"github.com/encador/fancue/internal/component"
 	"github.com/starfederation/datastar-go/datastar"
 )
+
+type Signals struct {
+	Captcha  captcha.Signals
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
 
 type Handler struct {
 }
@@ -30,22 +37,15 @@ func (h *Handler) TestPage() http.Handler {
 
 func (h *Handler) LoginPage() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		component.Base(component.LoginForm()).Render(r.Context(),w)
+		component.Base(component.LoginForm()).Render(r.Context(), w)
 	})
 }
 
-type PageSignals struct {
-	Captcha captcha.Signals
-}
-
-func (h *Handler) Captcha() http.Handler {
+func (h *Handler) Login() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		signals := PageSignals{}
-		datastar.ReadSignals(r, &signals)
-		sse := datastar.NewSSE(w, r)
-		if !captcha.Check(signals.Captcha) {
-			sse.PatchElementTempl(captcha.New())
 
-		}
+		s := Signals{}
+		datastar.ReadSignals(r, &s)
+		fmt.Println(s.Username, s.Password)
 	})
 }

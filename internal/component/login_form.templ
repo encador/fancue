@@ -2,17 +2,25 @@ package component
 
 templ LoginForm() {
 	@LoginFormCSS()
-	<form id="login-form">
-		<span id="login-form-title">Login</span>
+	<form
+		id="login-form"
+	>
+		<span data-init="$test='hehe'" id="login-form-title">Login</span>
 		<label for="form-username">Username</label>
-		<input id="form-username" type="text"/>
+		<input id="form-username" data-bind="username" type="text"/>
 		<label for="form-password">Password</label>
-		<input id="form-password" type="password"/>
+		<input
+			id="form-password"
+			data-bind="password"
+			type="password"
+		/>
 		<button
 			type="button"
 			class="green"
 			id="login-form-submit"
-			data-on:click="@post('captcha')"
+			data-attr:disabled="$username === '' || $password === '' || $requesting"
+			data-on:click="@post('/login')"
+			data-indicator="requesting"
 		>Login</button>
 	</form>
 }
@@ -34,19 +42,18 @@ templ LoginFormCSS() {
 			margin: 1.5rem;
 		}
 		#login-form label {
-			font-size: 1.2rem;
+			font-size: 1.4rem;
 			font-weight: bold;
-			color: var(--red-3)
+			color: var(--red-3);
 		}
 		#login-form-title {
 			position: absolute;
-			bottom: calc(100% - 0.5rem);
+			bottom: calc(100% - 1rem);
 			left: -1.5rem;
-			rotate: -5deg;
-			padding: 0 0.5rem 0 0.5rem;
+			rotate: -10deg;
+			padding: 0 1rem 0 1rem;
 			background-color: var(--beige);
 			border: 0.2rem solid var(--border);
-			/*border-radius: 5px;*/
 			font-weight: bold;
 			font-size: 1.5rem;
 		}

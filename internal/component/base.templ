@@ -40,6 +40,9 @@ templ Base(content ...templ.Component) {
 }
 
 templ BaseCSS() {
+	@ColorCSS()
+	@ButtonCSS()
+	@InputCSS()
 	<style>
 		* {
 			padding: 0;
@@ -49,6 +52,20 @@ templ BaseCSS() {
 			-webkit-user-select: none;
 		}
 
+		body {
+			background-color: var(--bg);
+			min-height: 100vh;
+			width: 100%;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		}
+	</style>
+}
+
+templ ColorCSS() {
+	<style>
 		:root {
 			--beige: #fff8eb;
 			--beige-2: #fff1d6;
@@ -63,12 +80,52 @@ templ BaseCSS() {
 			--green: #9fd1a9;
 			--green-2: #75bd84;
 			--green-3: #3c7c49;
+			--orange: #ffe9d6;
+			--orange-2: #ffd3ad;
+			--orange-3: #7a3900;
 
 			--bg: var(--beige-2);
 			--border: var(--black);
 			--primary: var(--beige-blue);
 		}
+	</style>
+}
 
+templ InputCSS() {
+	<style>
+		input {
+			all: unset;
+			border: 0.2rem solid var(--orange-3);
+			box-shadow: 0.2rem 0.2rem var(--orange-3);
+			background-color: var(--orange);
+			color: var(--orange-3);
+			font-weight: bold;
+			font-size: 1.2rem;
+			padding: 0.15rem;
+			text-align: center;
+			margin: 0.3rem;
+			margin-top: 0;
+		}
+		input:hover:not(:disabled) {
+			cursor: text;
+			background-color: var(--orange-2);
+		}
+		input:focus:not(:disabled) {
+			background-color: var(--orange-2);
+			transform: translate(0.2rem, 0.2rem);
+			box-shadow: none;
+		}
+		input:disabled {
+			cursor: default;
+			transform: translate(0.2rem, 0.2rem);
+			box-shadow: none;
+			opacity: 0.5;
+		}
+	</style>
+}
+
+templ ButtonCSS() {
+	<style>
 		button {
 			/*font-size: clamp(1rem, 1vw, 1.5rem);*/
 			font-size: 1.5rem;
@@ -78,9 +135,6 @@ templ BaseCSS() {
 			cursor: pointer;
 			box-shadow: 0.25rem 0.25rem;
 			height: fit-content;
-			/*transition:
-				transform 0.05s ease,
-				box-shadow 0.05s ease;*/
 		}
 		button:hover {
 			transform: translate(0.05rem, 0.05rem);
@@ -117,44 +171,6 @@ templ BaseCSS() {
 		}
 		button.blue:hover:not(:disabled) {
 			background-color: var(--blue-2);
-		}
-
-		input {
-			all: unset;
-			border: 0.2rem solid #7a3900;
-			box-shadow: 0.2rem 0.2rem #7a3900;
-			background-color: #ffe9d6;
-			color: black;
-			font-size: 1.2rem;
-			padding: 0.15rem;
-			text-align: center;
-			margin-bottom: 1rem;
-		}
-		input:hover:not(:disabled) {
-			cursor: text;
-			background-color: #ffd3ad;
-		}
-		input:focus:not(:disabled) {
-			border: 0.2rem solid #7a3900;
-			background-color: #ffd3ad;
-			transform: translate(0.2rem, 0.2rem);
-			box-shadow: none;
-		}
-		input:disabled {
-			cursor: default;
-			transform: translate(0.2rem, 0.2rem);
-			box-shadow: none;
-			opacity: 0.5;
-		}
-
-		body {
-			background-color: var(--bg);
-			min-height: 100vh;
-			width: 100%;
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
 		}
 	</style>
 }

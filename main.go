@@ -38,10 +38,9 @@ func main() {
 	h := handler.NewHandler()
 	mux.Handle("GET /{$}", h.HomePage())
 	mux.Handle("GET /login", h.LoginPage())
-
+	mux.Handle("POST /login", h.Login())
 
 	mux.Handle("/test", h.TestPage())
-	mux.Handle("/captcha", h.Captcha())
 
 	srv := http.Server{
 		Addr:    fmt.Sprintf("%s:%d", cnf.address, cnf.port),
