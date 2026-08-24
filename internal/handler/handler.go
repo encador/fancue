@@ -28,12 +28,7 @@ func (h *Handler) HomePage() http.Handler {
 	})
 }
 
-func (h *Handler) TestPage() http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		challenge := captcha.New()
-		component.Base(component.TestForm(challenge)).Render(r.Context(), w)
-	})
-}
+
 
 func (h *Handler) LoginPage() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
