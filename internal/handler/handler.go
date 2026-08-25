@@ -27,7 +27,6 @@ func (h *Handler) HomePage() http.Handler {
 func (h *Handler) LoginPage() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		component.Base(component.LoginForm(), h.s.NewCaptcha() ).Render(r.Context(), w)
-		fmt.Println(service.RandInt(100))
 	})
 }
 
@@ -36,7 +35,8 @@ func (h *Handler) Login() http.Handler {
 
 		s := model.Signals{}
 		datastar.ReadSignals(r, &s)
-		fmt.Println(s.Username, s.Password)
-		fmt.Println(s.Captcha.Selections)
+		fmt.Println(h.s.Captcha.Validate(s.Captcha))
+		sse := datastar.NewSSE(w,r)
+		sse.PatchElementTempl(h.s.NewCaptcha(), datastar.WithModeReplace())
 	})
 }

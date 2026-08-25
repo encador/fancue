@@ -15,10 +15,15 @@ var emoji = []string{
 	"🍆", "🥑", "🌽", "🍒", "🥜", "🍎", "🥦",
 }
 
+type Captcha struct {
+	salt []byte
+	log  map[[32]byte]struct{}
+}
+
 // genCaptcha is used to instantiate captcha component data
 //
 // return choices []string, targets []int, and error
-func genCaptcha(count int) ([]string, []int, error) {
+func genCaptcha(count int) ([]string, []int) {
 	choices := make([]string, count)
 	targets := []int{}
 	for i := range count {
@@ -32,29 +37,58 @@ func genCaptcha(count int) ([]string, []int, error) {
 		}
 	}
 
-	return choices, targets, nil
+	return choices, targets
 }
 
-func getHash(arr []int, salt []byte) string {
+func hashCaptcha(id string, selections []int, salt []byte) string {
 	h := sha256.New()
 	h.Write(salt[:])
-	for i, n := range arr {
+	for i, n := range selections {
 		if i > 0 {
 			h.Write([]byte("-"))
 		}
 		h.Write([]byte(strconv.Itoa(n)))
 	}
+	h.Write([]byte(id))
 	return hex.EncodeToString(h.Sum(nil))
 }
 
 // Returns a fully functional captcha templ.Component
 func (s *Service) NewCaptcha() templ.Component {
-	icons, targets, _ := genCaptcha(2)
-	return component.Captcha(icons, icons[targets[0]], getHash(targets, s.CaptchaSalt))
+	icons, targets := genCaptcha(10)
+	id := RandString()
+	hash := hashCaptcha(id, targets, s.Captcha.salt)
+
+	return component.Captcha(id, icons, icons[targets[0]], hash)
+}
+
+// Check if captcha hash was previously Seen
+//
+// Set seen to true if not
+func (c *Captcha) Seen(hash string) bool {
+	tmp, _ := hex.DecodeString(hash)
+	b := [32]byte(tmp)
+	_, ok := c.log[b]
+	if ok {
+		return true
+	}
+	c.log[b] = struct{}{}
+	return false
 }
 
 // Returns true if captcha answer is correct
-func (s *Service) CaptchaCheck(signals model.CaptchaSignals) bool {
+//
+// Returns false if captcha was previously validated
+func (c *Captcha) Validate(signals model.Captcha) bool {
+	// Check if captcha already submitted before
+	if c.Seen(signals.Secret) {
+		return false
+	}
+
 	slices.Sort(signals.Selections)
-	return signals.Secret == getHash(signals.Selections, s.CaptchaSalt)
+	if signals.Secret != hashCaptcha(signals.ID, signals.Selections, c.salt) {
+		return false
+	}
+
+	return true
 }

@@ -1,9 +1,9 @@
 package service
 
 type Service struct {
-	CaptchaSalt []byte
+	Captcha Captcha
 }
 
 func New() *Service {
-	return &Service{CaptchaSalt: RandBytes(32)}
+	return &Service{Captcha: Captcha{salt: RandBytes(32), log: make(map[[32]byte]struct{})}}
 }

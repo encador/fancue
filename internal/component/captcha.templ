@@ -2,11 +2,11 @@ package component
 
 import "strconv"
 
-templ Captcha(icons []string, target, secret string) {
+templ Captcha(id string, icons []string, target, secret string) {
 	@CaptchaCSS()
 	<div
 		id="captcha"
-		data-init={ "$captcha = {selection: [], secret: '" + secret + "'}" }
+		data-init={ "$captcha = {id: '" + id + "', selection: [], secret: '" + secret + "'}" }
 	>
 		<span id="captcha-prompt">Select all: { target }</span>
 		<div id="captcha-box">
@@ -38,7 +38,7 @@ templ CaptchaCSS() {
 			align-items: center;
 			border: 0.2rem solid var(--border);
 			background-color: var(--beige);
-			 /*box-shadow: 0.1rem 0.1rem var(--border);*/
+			/*box-shadow: 0.1rem 0.1rem var(--border);*/
 			/*padding-top: 0.5rem;*/
 			margin-left: 2.3rem;
 			margin-right: 2.3rem;
@@ -55,9 +55,8 @@ templ CaptchaCSS() {
 		#captcha-prompt {
 			position: absolute;
 			font-size: 1.5rem;
-			top: -1.8rem;
-			left: -2.5rem;
-			rotate: -3deg;
+			bottom: calc(100% - 0.5rem);
+			left: 2rem;
 			border: 0.2rem solid black;
 			padding: 0 0.5rem 0 0.5rem;
 			width: fit-content;
