@@ -1,11 +1,8 @@
 package service
 
 import (
-	"crypto/rand"
 	"crypto/sha256"
 	"encoding/hex"
-	"fmt"
-	"math/big"
 	"slices"
 	"strconv"
 
@@ -18,12 +15,6 @@ var emoji = []string{
 	"🍆", "🥑", "🌽", "🍒", "🥜", "🍎", "🥦",
 }
 
-func getSalt(size int) ([]byte, error) {
-	salt := make([]byte, size)
-	_, err := rand.Read(salt)
-	return salt, err
-}
-
 // genCaptcha is used to instantiate captcha component data
 //
 // return choices []string, targets []int, and error
@@ -31,15 +22,10 @@ func genCaptcha(count int) ([]string, []int, error) {
 	choices := make([]string, count)
 	targets := []int{}
 	for i := range count {
-		num, _ := rand.Int(rand.Reader, big.NewInt(int64(len(emoji))))
-		choices[i] = emoji[int(num.Int64())]
+		choices[i] = emoji[RandInt(len(emoji))]
 	}
 
-	n, err := rand.Int(rand.Reader, big.NewInt(int64(len(choices))))
-	if err != nil {
-		return []string{}, []int{}, err
-	}
-	t := choices[n.Int64()]
+	t := choices[RandInt(len(choices))]
 	for i, c := range choices {
 		if c == t {
 			targets = append(targets, i)
@@ -64,12 +50,11 @@ func getHash(arr []int, salt []byte) string {
 // Returns a fully functional captcha templ.Component
 func (s *Service) NewCaptcha() templ.Component {
 	icons, targets, _ := genCaptcha(2)
-	fmt.Println(getHash(targets, s.CaptchaSalt))
 	return component.Captcha(icons, icons[targets[0]], getHash(targets, s.CaptchaSalt))
 }
 
 // Returns true if captcha answer is correct
-func (c *Service) CaptchaCheck(s model.CaptchaSignals) bool {
-	slices.Sort(s.Selections)
-	return s.Secret == getHash(s.Selections, c.CaptchaSalt)
+func (s *Service) CaptchaCheck(signals model.CaptchaSignals) bool {
+	slices.Sort(signals.Selections)
+	return signals.Secret == getHash(signals.Selections, s.CaptchaSalt)
 }

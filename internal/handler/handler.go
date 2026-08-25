@@ -27,6 +27,7 @@ func (h *Handler) HomePage() http.Handler {
 func (h *Handler) LoginPage() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		component.Base(component.LoginForm(), h.s.NewCaptcha() ).Render(r.Context(), w)
+		fmt.Println(service.RandInt(100))
 	})
 }
 
