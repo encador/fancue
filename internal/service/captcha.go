@@ -1,4 +1,4 @@
-package captcha
+package service
 
 import (
 	"crypto/rand"
@@ -11,22 +11,17 @@ import (
 
 	"github.com/a-h/templ"
 	"github.com/encador/fancue/internal/component"
+	"github.com/encador/fancue/internal/model"
 )
-
-var salt [32]byte
 
 var emoji = []string{
 	"🍆", "🥑", "🌽", "🍒", "🥜", "🍎", "🥦",
 }
 
-type Signals struct {
-	Secret     string `json:"secret"`
-	Selections []int  `json:"selection"`
-}
-
-func init() {
-	fmt.Println("[LOG] CAPTCHA secret init")
-	rand.Read(salt[:])
+func getSalt(size int) ([]byte, error) {
+	salt := make([]byte, size)
+	_, err := rand.Read(salt)
+	return salt, err
 }
 
 // genCaptcha is used to instantiate captcha component data
@@ -54,7 +49,7 @@ func genCaptcha(count int) ([]string, []int, error) {
 	return choices, targets, nil
 }
 
-func getHash(arr []int) string {
+func getHash(arr []int, salt []byte) string {
 	h := sha256.New()
 	h.Write(salt[:])
 	for i, n := range arr {
@@ -67,13 +62,14 @@ func getHash(arr []int) string {
 }
 
 // Returns a fully functional captcha templ.Component
-func New() templ.Component {
-	icons, targets, _ := genCaptcha(10)
-	return component.Captcha(icons, icons[targets[0]], getHash(targets))
+func (s *Service) NewCaptcha() templ.Component {
+	icons, targets, _ := genCaptcha(2)
+	fmt.Println(getHash(targets, s.CaptchaSalt))
+	return component.Captcha(icons, icons[targets[0]], getHash(targets, s.CaptchaSalt))
 }
 
 // Returns true if captcha answer is correct
-func Check(s Signals) bool {
+func (c *Service) CaptchaCheck(s model.CaptchaSignals) bool {
 	slices.Sort(s.Selections)
-	return s.Secret == getHash(s.Selections)
+	return s.Secret == getHash(s.Selections, c.CaptchaSalt)
 }
