@@ -38,6 +38,7 @@ func main() {
 	h := handler.NewHandler()
 	mux.Handle("GET /{$}", h.HomePage())
 	mux.Handle("GET /login", h.LoginPage())
+	mux.Handle("GET /register", h.RegisterPage())
 	mux.Handle("POST /login", h.Login())
 
 	srv := http.Server{

@@ -1,0 +1,34 @@
+package component
+
+import "strconv"
+
+templ LoginPage(register bool) {
+	@LoginPageCSS()
+	<p data-init={ "$register = " + strconv.FormatBool(register) }></p>
+	<div
+		data-show="!$register"
+		style="position: relative;"
+	>
+		@LoginForm()
+		<button id="toggle-register" class="blue" type="button" data-on:click="$register = true">New Account</button>
+	</div>
+	<div
+		data-show="$register"
+		style="position: relative;"
+	>
+		@RegisterForm()
+		<button id="toggle-register" class="blue" type="button" data-on:click="$register = false">Use Existing</button>
+	</div>
+}
+
+templ LoginPageCSS() {
+	<style>
+		#toggle-register {
+			position: absolute;
+			font-size: 1.2rem;
+			bottom: calc(100% - 2rem);
+			right: -0.5rem;
+			rotate: 5deg;
+		}
+	</style>
+}

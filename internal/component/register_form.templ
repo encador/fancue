@@ -1,11 +1,11 @@
 package component
 
-templ LoginForm() {
-	@LoginFormCSS()
+templ RegisterForm() {
+	@RegisterFormCSS()
 	<form
-		id="login-form"
+		id="register-form"
 	>
-		<span data-init="$test='hehe'" id="login-form-title">Login</span>
+		<span id="register-form-title">Register</span>
 		<label for="form-username">Username</label>
 		<input id="form-username" data-bind="username" type="text"/>
 		<label for="form-password">Password</label>
@@ -14,20 +14,26 @@ templ LoginForm() {
 			data-bind="password"
 			type="password"
 		/>
+		<label for="form-password-repeat" data-style:color="($password !== $password2) && 'var(--red-2)'">Repeat Password</label>
+		<input
+			id="form-password-repeat"
+			data-bind="password2"
+			type="password"
+		/>
 		<button
 			type="button"
 			class="green"
-			id="login-form-submit"
-			data-attr:disabled="$username === '' || $password === '' || $requesting"
-			data-on:click="@post('/login')"
+			id="register-form-submit"
+			data-attr:disabled="$username === '' || $password === '' || $password !== $password2 || $requesting"
+			data-on:click="@post('/register')"
 			data-indicator="requesting"
-		>Login</button>
+		>Submit</button>
 	</form>
 }
 
-templ LoginFormCSS() {
+templ RegisterFormCSS() {
 	<style>
-		#login-form {
+		#register-form {
 			position: relative;
 			width: fit-content;
 			padding: 1rem;
@@ -41,12 +47,12 @@ templ LoginFormCSS() {
 			/*gap: 1rem;*/
 			margin: 1.5rem;
 		}
-		#login-form label {
+		#register-form label {
 			font-size: 1.4rem;
 			font-weight: bold;
 			color: var(--red-3);
 		}
-		#login-form-title {
+		#register-form-title {
 			position: absolute;
 			bottom: calc(100% - 1rem);
 			left: -1.5rem;
@@ -57,7 +63,7 @@ templ LoginFormCSS() {
 			font-weight: bold;
 			font-size: 1.5rem;
 		}
-		#login-form-submit {
+		#register-form-submit {
 			position: absolute;
 			top: calc(100% - 1.5rem);
 			padding-right: 1rem;
