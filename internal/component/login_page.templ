@@ -7,14 +7,14 @@ templ LoginPage(register bool) {
 	<p data-init={ "$register = " + strconv.FormatBool(register) }></p>
 	<div
 		data-show="!$register"
-		style="position: relative;"
+		style="position: relative; display: none;"
 	>
 		@LoginForm()
 		<button id="toggle-register" class="blue" type="button" data-on:click="$register = true; history.replaceState(null, '', '/register')">New Account</button>
 	</div>
 	<div
 		data-show="$register"
-		style="position: relative;"
+		style="position: relative; display: none;"
 	>
 		@RegisterForm()
 		<button id="toggle-register" class="blue" type="button" data-on:click="$register = false; history.replaceState(null, '', '/login')">Use Existing</button>
