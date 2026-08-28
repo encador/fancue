@@ -30,6 +30,8 @@ templ Base(content ...templ.Component) {
 		<head>
 			@BaseCSS()
 			<script type="module" src="/static/datastar.js"></script>
+			<title>FanCue</title>
+			<link rel="icon" href="static/icon.png"/>
 		</head>
 		<body>
 			for _, c := range content {
