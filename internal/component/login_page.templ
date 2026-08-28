@@ -10,14 +10,14 @@ templ LoginPage(register bool) {
 		style="position: relative;"
 	>
 		@LoginForm()
-		<button id="toggle-register" class="blue" type="button" data-on:click="$register = true">New Account</button>
+		<button id="toggle-register" class="blue" type="button" data-on:click="$register = true; history.replaceState(null, '', '/register')">New Account</button>
 	</div>
 	<div
 		data-show="$register"
 		style="position: relative;"
 	>
 		@RegisterForm()
-		<button id="toggle-register" class="blue" type="button" data-on:click="$register = false">Use Existing</button>
+		<button id="toggle-register" class="blue" type="button" data-on:click="$register = false; history.replaceState(null, '', '/login')">Use Existing</button>
 	</div>
 }
 

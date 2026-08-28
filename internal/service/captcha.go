@@ -66,7 +66,11 @@ func (s *Service) NewCaptcha() templ.Component {
 //
 // Set seen to true if not
 func (c *Captcha) Seen(hash string) bool {
-	tmp, _ := hex.DecodeString(hash)
+	tmp, err := hex.DecodeString(hash)
+	if err != nil {
+		// technically not seen
+		return true
+	}
 	b := [32]byte(tmp)
 	_, ok := c.log[b]
 	if ok {
@@ -81,7 +85,7 @@ func (c *Captcha) Seen(hash string) bool {
 // Returns false if captcha was previously validated
 func (c *Captcha) Validate(signals model.Captcha) bool {
 	// Check if captcha already submitted before
-	if c.Seen(signals.Secret) {
+	if signals.Secret == "" || c.Seen(signals.Secret) {
 		return false
 	}
 
