@@ -1,0 +1,40 @@
+version: "3"
+
+vars:
+  APP_NAME: Fancue
+  BIN_DIR: bin
+  BIN: "{{.BIN_DIR}}/{{.APP_NAME}}"
+  CMD: "{{.BIN}} --port=8080"
+
+tasks:
+  clean:
+    desc: Remove build files
+    cmd: rm -rf "{{.BIN_DIR}}"
+
+  templ:
+    desc: Generate template files
+    cmd: go tool templ generate
+
+  build:
+    desc: Build the app binary
+    deps: [templ]
+    cmds:
+      - go mod tidy
+      - go build -o {{.BIN}} .
+
+  run:
+    desc: Runs the app
+    deps: [build]
+    cmds:
+      - "{{.CMD}}"
+
+  dev:
+    desc: Live updating dev mode
+    cmds:
+      - >
+        go tool templ generate --watch
+        --cmd="go run . --port=55000"
+        --proxy="http://localhost:55000"
+        --proxybind="localhost"
+        --proxyport="8080"
+        --open-browser=false
