@@ -24,6 +24,50 @@ templ Buttons() {
 	</style>
 }
 
+templ MsgBar() {
+	<div id="msg-bar">
+		@MsgBoxCSS()
+		for _ = range 20 {
+			@MsgBox()
+		}
+	</div>
+	<style>
+		#msg-bar {
+			position: absolute;
+			/* background-color: red; */
+			height: 2.5rem;
+			width: 100vw;
+			top: 0;
+			z-index: 999999;
+			overflow: hidden;
+			overflow: auto;
+			display: flex;
+			flex-direction: row;
+			gap: 0.4rem;
+		}
+	</style>
+}
+
+templ MsgBox() {
+	<div class="msg-box">
+		<p>
+			Hello World
+		</p>
+	</div>
+}
+
+templ MsgBoxCSS() {
+	<style>
+		.msg-box {
+			font-weight: bold;
+			font-size: 1.5rem;
+			border: 0.2rem solid red;
+			text-align: center;
+			min-width: fit-content;
+		}
+	</style>
+}
+
 templ Base(content ...templ.Component) {
 	<!DOCTYPE html>
 	<html>
@@ -34,6 +78,7 @@ templ Base(content ...templ.Component) {
 			<link rel="icon" href="static/icon.png"/>
 		</head>
 		<body>
+			@MsgBar()
 			for _, c := range content {
 				@c
 			}
@@ -62,6 +107,8 @@ templ BaseCSS() {
 			flex-direction: column;
 			justify-content: center;
 			align-items: center;
+			padding-top: 4rem;
+			padding-bottom: 2rem;
 		}
 	</style>
 }
