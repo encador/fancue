@@ -53,9 +53,13 @@ sequenceDiagram
 
 ## `Local Deployment`
 
+#### Dependencies:
+ - [Go](https://go.dev/) 1.26.6
+ - [Task](https://taskfile.dev/) (used for build automation)
+
 ```bash
 git clone git@github.com:encador/fancue.git
 cd fancue
-go mod download
-go run .
+go mod tidy
+task run
 ```
