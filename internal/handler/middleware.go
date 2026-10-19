@@ -1,4 +1,4 @@
-package middleware
+package handler
 
 import (
 	"fmt"
@@ -6,7 +6,10 @@ import (
 	"strconv"
 )
 
-func Cache(next http.Handler, hours int) http.Handler {
+type Middleware struct{}
+
+// Cache response from next handler for x hours
+func (h *Middleware) Cache(next http.Handler, hours int) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet || r.Method == http.MethodHead {
 			age := strconv.Itoa(hours * 3600)
@@ -16,7 +19,8 @@ func Cache(next http.Handler, hours int) http.Handler {
 	})
 }
 
-func Logger(next http.Handler) http.Handler {
+// Log all http requests to stdout
+func (h *Middleware) Logger(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("%s: %s\n", r.Method, r.URL)
 		next.ServeHTTP(w, r)

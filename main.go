@@ -13,7 +13,6 @@ import (
 	"embed"
 
 	"github.com/encador/fancue/internal/handler"
-	"github.com/encador/fancue/internal/middleware"
 )
 
 type config struct {
@@ -31,11 +30,12 @@ func main() {
 	flag.Parse()
 
 	mux := http.NewServeMux()
+	h := handler.NewHandler()
+	middleware := handler.Middleware{}
 
 	sub, _ := fs.Sub(staticFiles, "internal/static")
 	mux.Handle("/static/", http.StripPrefix("/static/", middleware.Cache(http.FileServerFS(sub), 24)))
 
-	h := handler.NewHandler()
 	mux.Handle("GET /{$}", h.HomePage())
 	mux.Handle("GET /login", h.LoginPage())
 	mux.Handle("GET /register", h.RegisterPage())
