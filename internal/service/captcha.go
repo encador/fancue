@@ -15,7 +15,7 @@ var emoji = []string{
 	"🍆", "🥑", "🌽", "🍒", "🥜", "🍎", "🥦",
 }
 
-type CaptchaService struct {
+type Captcha struct {
 	key        []byte
 	log        map[[32]byte]struct{}
 	maxLogSize int
@@ -55,7 +55,7 @@ func hashCaptcha(id string, selections []int, salt []byte) string {
 }
 
 // Returns a fully functional captcha templ.Component
-func (s *Service) NewCaptcha() templ.Component {
+func (s *Service) New() templ.Component {
 	icons, targets := genCaptcha(10)
 	id := RandString()
 	hash := hashCaptcha(id, targets, s.Captcha.key)
@@ -64,7 +64,7 @@ func (s *Service) NewCaptcha() templ.Component {
 }
 
 // Check if captcha hash was previously submitted
-func (c *CaptchaService) IsNew(hash [32]byte) bool {
+func (c *Captcha) IsNew(hash [32]byte) bool {
 	if _, ok := c.log[hash]; ok {
 		return false
 	}
@@ -75,7 +75,7 @@ func (c *CaptchaService) IsNew(hash [32]byte) bool {
 //
 // Rotates the secret key when the log exceeds max size.
 // Currenty this invalidats all previously issued captchas
-func (c *CaptchaService) AddToLog(hash [32]byte) {
+func (c *Captcha) AddToLog(hash [32]byte) {
 	c.log[hash] = struct{}{}
 	if len(c.log) > c.maxLogSize {
 		c.key = RandBytes(32)
@@ -87,7 +87,11 @@ func (c *CaptchaService) AddToLog(hash [32]byte) {
 // Returns true if captcha answer is correct
 //
 // Returns false if captcha was previously validated
-func (c *CaptchaService) Validate(signals model.CaptchaSignals) bool {
+func (c *Captcha) Validate(signals model.CaptchaSignals) bool {
+	if signals.ID == "" || signals.Secret == "" || len(signals.Selections) == 0 {
+		return false
+	}
+
 	tmp, err := hex.DecodeString(signals.Secret)
 	if err != nil {
 		return false
@@ -99,7 +103,6 @@ func (c *CaptchaService) Validate(signals model.CaptchaSignals) bool {
 		return false
 	}
 	c.AddToLog(hash)
-
 
 	slices.Sort(signals.Selections)
 	if signals.Secret != hashCaptcha(signals.ID, signals.Selections, c.key) {

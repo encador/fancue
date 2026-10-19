@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/encador/fancue/internal/component"
@@ -26,14 +27,14 @@ func (h *Handler) HomePage() http.Handler {
 func (h *Handler) LoginPage() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// component.Base(component.LoginForm()).Render(r.Context(), w)
-		component.Base(component.LoginPage(false)).Render(r.Context(), w)
+		component.Base(component.LoginPage(false), h.s.New()).Render(r.Context(), w)
 	})
 }
 
 func (h *Handler) RegisterPage() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// component.Base(component.RegisterForm()).Render(r.Context(), w)
-		component.Base(component.LoginPage(true)).Render(r.Context(), w)
+		component.Base(component.LoginPage(true), h.s.New()).Render(r.Context(), w)
 	})
 }
 
@@ -42,6 +43,6 @@ func (h *Handler) Login() http.Handler {
 
 		s := model.Signals{}
 		datastar.ReadSignals(r, &s)
-		// fmt.Println(h.s.Captcha.Validate(s.Captcha))
+		fmt.Println(h.s.Captcha.Validate(s.Captcha))
 	})
 }
