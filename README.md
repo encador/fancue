@@ -60,6 +60,5 @@ sequenceDiagram
 ```bash
 git clone git@github.com:encador/fancue.git
 cd fancue
-go mod tidy
 task run
 ```
