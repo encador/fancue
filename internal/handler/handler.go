@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/encador/fancue/internal/component"
@@ -43,6 +42,6 @@ func (h *Handler) Login() http.Handler {
 
 		s := model.Signals{}
 		datastar.ReadSignals(r, &s)
-		fmt.Println(h.s.Captcha.Validate(s.Captcha))
+		// fmt.Println(h.s.Captcha.Validate(s.Captcha))
 	})
 }

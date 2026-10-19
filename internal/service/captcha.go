@@ -15,9 +15,10 @@ var emoji = []string{
 	"🍆", "🥑", "🌽", "🍒", "🥜", "🍎", "🥦",
 }
 
-type Captcha struct {
-	salt []byte
-	log  map[[32]byte]struct{}
+type CaptchaService struct {
+	key        []byte
+	log        map[[32]byte]struct{}
+	maxLogSize int
 }
 
 // genCaptcha is used to instantiate captcha component data
@@ -57,40 +58,51 @@ func hashCaptcha(id string, selections []int, salt []byte) string {
 func (s *Service) NewCaptcha() templ.Component {
 	icons, targets := genCaptcha(10)
 	id := RandString()
-	hash := hashCaptcha(id, targets, s.Captcha.salt)
+	hash := hashCaptcha(id, targets, s.Captcha.key)
 
 	return component.Captcha(id, icons, icons[targets[0]], hash)
 }
 
-// Check if captcha hash was previously Seen
+// Check if captcha hash was previously submitted
+func (c *CaptchaService) IsNew(hash [32]byte) bool {
+	if _, ok := c.log[hash]; ok {
+		return false
+	}
+	return true
+}
+
+// Adds a given captcha hash to the log
 //
-// Set seen to true if not
-func (c *Captcha) Seen(hash string) bool {
-	tmp, err := hex.DecodeString(hash)
-	if err != nil {
-		// technically not seen
-		return true
+// Rotates the secret key when the log exceeds max size.
+// Currenty this invalidats all previously issued captchas
+func (c *CaptchaService) AddToLog(hash [32]byte) {
+	c.log[hash] = struct{}{}
+	if len(c.log) > c.maxLogSize {
+		c.key = RandBytes(32)
+		c.log = make(map[[32]byte]struct{})
 	}
-	b := [32]byte(tmp)
-	_, ok := c.log[b]
-	if ok {
-		return true
-	}
-	c.log[b] = struct{}{}
-	return false
+	return
 }
 
 // Returns true if captcha answer is correct
 //
 // Returns false if captcha was previously validated
-func (c *Captcha) Validate(signals model.Captcha) bool {
-	// Check if captcha already submitted before
-	if signals.Secret == "" || c.Seen(signals.Secret) {
+func (c *CaptchaService) Validate(signals model.CaptchaSignals) bool {
+	tmp, err := hex.DecodeString(signals.Secret)
+	if err != nil {
 		return false
 	}
+	hash := [32]byte(tmp)
+
+	if signals.Secret == "" || !c.IsNew(hash) {
+		c.AddToLog(hash)
+		return false
+	}
+	c.AddToLog(hash)
+
 
 	slices.Sort(signals.Selections)
-	if signals.Secret != hashCaptcha(signals.ID, signals.Selections, c.salt) {
+	if signals.Secret != hashCaptcha(signals.ID, signals.Selections, c.key) {
 		return false
 	}
 
