@@ -42,7 +42,7 @@ templ MsgBar() {
 			/* overflow: hidden; */
 			display: flex;
 			flex-direction: row;
-      justify-content: center;
+			justify-content: center;
 			gap: 0.4rem;
 			padding: 0 0.4rem 0 0.4rem;
 		}
@@ -50,7 +50,7 @@ templ MsgBar() {
 }
 
 templ MsgBox() {
-	<div class="msg-box">
+	<div class="msg-box red">
 		<p>
 			Hello World
 		</p>
@@ -62,14 +62,17 @@ templ MsgBoxCSS() {
 		.msg-box {
 			font-weight: bold;
 			font-size: 1.5rem;
-			border: 0.2rem solid var(--red-3);
-			color: var(--red-3);
-			background-color: var(--red);
+			border: 0.2rem solid;
 			min-width: fit-content;
 			padding: 0.2rem;
 			display: flex;
 			align-items: center;
 			justify-content: center;
+		}
+		.msg-box:hover {
+			cursor: pointer;
+			rotate: 3.5deg;
+			opacity: 0.8;
 		}
 	</style>
 }
@@ -135,13 +138,29 @@ templ ColorCSS() {
 			--green: #9fd1a9;
 			--green-2: #75bd84;
 			--green-3: #3c7c49;
-			--orange: #ffe9d6;
 			--orange-2: #ffd3ad;
 			--orange-3: #7a3900;
 
 			--bg: var(--beige-2);
 			--border: var(--black);
 			--primary: var(--beige-blue);
+		}
+
+		.red {
+			color: var(--red-3);
+			background-color: var(--red);
+		}
+		.green {
+			color: var(--green-3);
+			background-color: var(--green);
+		}
+		.blue {
+			color: var(--blue-3);
+			background-color: var(--blue);
+		}
+		.orange {
+			color: var(--orange-3);
+			background-color: var(--orange-2);
 		}
 	</style>
 }
@@ -207,24 +226,15 @@ templ ButtonCSS() {
 			transition: none;
 			cursor: default;
 		}
-		button.red {
-			color: var(--red-3);
-			background-color: var(--red);
-		}
+
 		button.red:hover:not(:disabled) {
 			background-color: var(--red-2);
 		}
-		button.green {
-			color: var(--green-3);
-			background-color: var(--green);
-		}
+
 		button.green:hover:not(:disabled) {
 			background-color: var(--green-2);
 		}
-		button.blue {
-			color: var(--blue-3);
-			background-color: var(--blue);
-		}
+
 		button.blue:hover:not(:disabled) {
 			background-color: var(--blue-2);
 		}
