@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -20,7 +19,7 @@ func NewHandler() *Handler {
 	return &Handler{s: service.New()}
 }
 
-func DisplayMsg(message, color string, sse *datastar.ServerSentEventGenerator) {
+func DisplayMsg(sse *datastar.ServerSentEventGenerator, message, color string) {
 	switch color {
 	case "blue", "green", "orange", "red":
 	default:
@@ -39,21 +38,21 @@ func (h *Handler) HomePage() http.Handler {
 func (h *Handler) Msg() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		sse := datastar.NewSSE(w, r)
-		DisplayMsg("Seconds: "+strconv.Itoa(time.Now().Second()), "blue", sse)
+		DisplayMsg(sse, "Seconds: "+strconv.Itoa(time.Now().Second()), "blue")
 	})
 }
 
 func (h *Handler) LoginPage() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// component.Base(component.LoginForm()).Render(r.Context(), w)
-		component.Base(component.LoginPage(false), h.s.New()).Render(r.Context(), w)
+		component.Base(component.LoginPage(false), h.s.Captcha.New()).Render(r.Context(), w)
 	})
 }
 
 func (h *Handler) RegisterPage() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// component.Base(component.RegisterForm()).Render(r.Context(), w)
-		component.Base(component.LoginPage(true), h.s.New()).Render(r.Context(), w)
+		component.Base(component.LoginPage(true), h.s.Captcha.New()).Render(r.Context(), w)
 	})
 }
 
@@ -62,6 +61,13 @@ func (h *Handler) Login() http.Handler {
 
 		s := model.Signals{}
 		datastar.ReadSignals(r, &s)
-		fmt.Println(h.s.Captcha.Validate(s.Captcha))
+		sse := datastar.NewSSE(w, r)
+		captchaValid := h.s.Captcha.Validate(s.Captcha)
+		if !captchaValid {
+			DisplayMsg(sse, "Invalid Captcha", "red")
+			sse.PatchElementTempl(h.s.Captcha.New(), datastar.WithSelectorID("captcha"), datastar.WithModeReplace())
+			return
+		}
+		DisplayMsg(sse, "Captcha Success", "green")
 	})
 }

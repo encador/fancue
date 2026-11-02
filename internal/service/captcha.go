@@ -55,10 +55,10 @@ func hashCaptcha(id string, selections []int, salt []byte) string {
 }
 
 // Returns a fully functional captcha templ.Component
-func (s *Service) New() templ.Component {
+func (c *Captcha) New() templ.Component {
 	icons, targets := genCaptcha(10)
 	id := RandString()
-	hash := hashCaptcha(id, targets, s.Captcha.key)
+	hash := hashCaptcha(id, targets, c.key)
 
 	return component.Captcha(id, icons, icons[targets[0]], hash)
 }

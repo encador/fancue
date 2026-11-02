@@ -32,7 +32,7 @@ templ MsgBar() {
 		#msg-bar {
 			position: absolute;
 			/* background-color: green; */
-			height: 2.7rem;
+			height: 2.4rem;
 			width: 100vw;
 			top: 0.5rem;
 			z-index: 999999;
@@ -50,7 +50,7 @@ templ MsgBar() {
 templ MsgBox(message, colorClass string) {
 	<div
 		class={ "msg-box", colorClass }
-		data-init__delay.10s="el.remove()"
+		data-init__delay.5s="el.remove()"
 		data-on:click="el.remove()"
 	>
 		<p>
@@ -66,7 +66,7 @@ templ MsgBoxCSS() {
 			font-size: 1.5rem;
 			border: 0.2rem solid;
 			min-width: fit-content;
-			height: 2.5rem;
+			height: 2.2rem;
 			padding: 0.2rem;
 			display: flex;
 			align-items: center;
@@ -175,7 +175,7 @@ templ InputCSS() {
 			all: unset;
 			border: 0.2rem solid var(--orange-3);
 			box-shadow: 0.2rem 0.2rem var(--orange-3);
-			background-color: var(--orange);
+			background-color: var(--orange-2);
 			color: var(--orange-3);
 			font-weight: bold;
 			font-size: 1.2rem;
