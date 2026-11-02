@@ -3,6 +3,8 @@ package handler
 import (
 	"fmt"
 	"net/http"
+	"strconv"
+	"time"
 
 	"github.com/encador/fancue/internal/component"
 	"github.com/encador/fancue/internal/model"
@@ -18,9 +20,26 @@ func NewHandler() *Handler {
 	return &Handler{s: service.New()}
 }
 
+func DisplayMsg(message, color string, sse *datastar.ServerSentEventGenerator) {
+	switch color {
+	case "blue", "green", "orange", "red":
+	default:
+		color = "blue"
+	}
+
+	sse.PatchElementTempl(component.MsgBox(message, color), datastar.WithSelectorID("msg-bar"), datastar.WithModeAppend())
+}
+
 func (h *Handler) HomePage() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		component.Base(component.Buttons()).Render(r.Context(), w)
+	})
+}
+
+func (h *Handler) Msg() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sse := datastar.NewSSE(w, r)
+		DisplayMsg("Seconds: "+strconv.Itoa(time.Now().Second()), "blue", sse)
 	})
 }
 

@@ -6,7 +6,7 @@ templ Buttons() {
 		data-init="$toggle=false"
 	>
 		<button type="button" data-attr:disabled="$toggle" data-on:click="$toggle = !$toggle" class="red">Click Me</button>
-		<button type="button" class="blue">o_o</button>
+		<button type="button" class="blue" data-on:click="@post('/msg')">o_o</button>
 		<button type="button" data-attr:disabled="!$toggle" data-on:click="$toggle = !$toggle" class="green">Click Me</button>
 	</div>
 	<style>
@@ -27,35 +27,34 @@ templ Buttons() {
 templ MsgBar() {
 	<div id="msg-bar">
 		@MsgBoxCSS()
-		for _ = range 3 {
-			@MsgBox()
-		}
 	</div>
 	<style>
 		#msg-bar {
 			position: absolute;
 			/* background-color: green; */
-			height: 2.5rem;
+			height: 2.7rem;
 			width: 100vw;
 			top: 0.5rem;
 			z-index: 999999;
 			/* overflow: hidden; */
+			overflow-x: auto;
 			display: flex;
-			flex-direction: row;
-			justify-content: center;
+			flex-direction: row-reverse;
+			/* justify-content: center; */
 			gap: 0.4rem;
 			padding: 0 0.4rem 0 0.4rem;
 		}
 	</style>
 }
 
-templ MsgBox() {
+templ MsgBox(message, colorClass string) {
 	<div
-		class = {}
+		class={ "msg-box", colorClass }
+		data-init__delay.10s="el.remove()"
 		data-on:click="el.remove()"
 	>
 		<p>
-			Hello World
+			{ message }
 		</p>
 	</div>
 }
@@ -67,6 +66,7 @@ templ MsgBoxCSS() {
 			font-size: 1.5rem;
 			border: 0.2rem solid;
 			min-width: fit-content;
+			height: 2.5rem;
 			padding: 0.2rem;
 			display: flex;
 			align-items: center;

@@ -40,6 +40,7 @@ func main() {
 	mux.Handle("GET /login", h.LoginPage())
 	mux.Handle("GET /register", h.RegisterPage())
 	mux.Handle("POST /login", h.Login())
+	mux.Handle("POST /msg", h.Msg())
 
 	srv := http.Server{
 		Addr:    fmt.Sprintf("%s:%d", cnf.address, cnf.port),
