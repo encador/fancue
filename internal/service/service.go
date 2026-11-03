@@ -1,9 +1,18 @@
 package service
 
 type Service struct {
-	Captcha Captcha
+	Captcha *Captcha
+	User    *User
 }
 
 func New() *Service {
-	return &Service{Captcha: Captcha{key: RandBytes(32), log: make(map[[32]byte]struct{}), maxLogSize: 100000}}
+
+	service := &Service{}
+	captcha := &Captcha{key: RandBytes(32), log: make(map[[32]byte]struct{}), maxLogSize: 100000}
+	service.Captcha = captcha
+
+	user := &User{}
+	service.User = user
+
+	return service
 }
