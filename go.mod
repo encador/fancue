@@ -6,6 +6,7 @@ tool github.com/a-h/templ/cmd/templ
 
 require (
 	github.com/a-h/templ v0.3.1100
+	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/starfederation/datastar-go v1.2.2
 )
 
