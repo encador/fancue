@@ -1,5 +1,7 @@
 package model
 
+type ContextKey string
+
 type CaptchaSignals struct {
 	ID         string `json:"id"`
 	Secret     string `json:"secret"`

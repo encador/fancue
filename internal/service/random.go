@@ -7,9 +7,9 @@ import (
 
 // Returns random []byte with length (size)
 func RandBytes(size int) []byte {
-	salt := make([]byte, size)
-	rand.Read(salt)
-	return salt
+	bytes := make([]byte, size)
+	rand.Read(bytes)
+	return bytes
 }
 
 // Returns random 26 byte string

@@ -3,6 +3,7 @@ package service
 type Service struct {
 	Captcha *Captcha
 	User    *User
+	Auth    *Auth
 }
 
 func New() *Service {
@@ -13,6 +14,9 @@ func New() *Service {
 
 	user := &User{}
 	service.User = user
+
+	auth := &Auth{ctxKey: "auth", signKey: RandBytes(32)}
+	service.Auth = auth
 
 	return service
 }
